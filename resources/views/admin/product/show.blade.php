@@ -85,11 +85,11 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Buying Price</label>
-                                                <p>{{ number_format($product->buying_price, 2) ." Taka" }}</p>
+                                                <p>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $product->buying_price, 2) ." Taka" }}</p>
                                             </div>
                                             <div class="form-group">
                                                 <label>Selling Price</label>
-                                                <p>{{ number_format($product->selling_price, 2) ." Taka" }}</p>
+                                                <p>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $product->selling_price, 2) ." Taka" }}</p>
                                             </div>
                                         </div>
                                     </div>

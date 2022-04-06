@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\Customer;
 use App\Order;
 use App\OrderDetail;
@@ -15,6 +16,7 @@ class InvoiceController extends Controller
 {
     public function create(Request $request)
     {
+        $currency = Currency::first();
         $inputs = $request->except('_token');
         $rules = [
           'customer_id' => 'required | integer',
@@ -33,7 +35,7 @@ class InvoiceController extends Controller
         $customer = Customer::findOrFail($customer_id);
         $contents = Cart::content();
         $company = Setting::latest()->first();
-        return view('admin.invoice', compact('customer', 'contents', 'company'));
+        return view('admin.invoice', compact('customer', 'contents', 'company','currency'));
     }
 
     public function print($customer_id)
@@ -85,7 +87,7 @@ class InvoiceController extends Controller
         $order->pay = $pay;
         $order->due = $due;
         $order->order_date = date('Y-m-d');
-        $order->order_status = 'pending';
+        $order->order_status = 'pendiente';
         $order->total_products = Cart::count();
         $order->sub_total = $sub_total;
         $order->vat = $tax;

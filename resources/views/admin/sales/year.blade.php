@@ -7,6 +7,7 @@
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
 @endpush
 
 @section('content')
@@ -46,7 +47,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">
                                     {{ strtoupper(date('Y')) }} EXPENSES LISTS
-                                    <small class="text-danger pull-right">Total Expenses : {{ $expenses->sum('amount') }} Taka</small>
+                                    <small class="text-danger pull-right">Total Expenses : {{ (session()->has('currency') ? 1 : $currency->value) * $expenses->sum('amount') }} Taka</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
@@ -73,7 +74,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $expense->name }}</td>
-                                            <td>{{ number_format($expense->amount, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $expense->amount, 2) }}</td>
                                             <td>{{ $expense->date->toFormattedDateString() }}</td>
                                         </tr>
                                     @endforeach
@@ -109,8 +110,45 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
 
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+
+     <script type="text/javascript">
+        $(document).ready(function () {
+
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "order": [
+                    [0, "desc"]
+                ],
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": ['csv', 'excel', 'pdf', 'print']
+            });
+        });
+    </script>
 
     <script>
         $(function () {

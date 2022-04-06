@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Today Expenses')
+@section('title', 'Gastos de Hoy')
 
 @push('css')
     <!-- DataTables -->
@@ -17,8 +17,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Today Expenses</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Gastos de Hoy</li>
                         </ol>
                     </div>
                 </div>
@@ -35,9 +35,10 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    TODAY EXPENSES LISTS
-                                    <small class="text-danger pull-right">Total Expenses : {{ $expenses->sum('amount') }} Taka</small>
-                                    <small class="text-primary">{{ date('d F Y') }}</small>
+                                    LISTA DE GASTOS DEL DIA DE HOY
+                                    <small class="text-danger pull-right">Total Gastos : {{(session()->has('currency') ? 1 : $currency->value) * $expenses->sum('amount') }}
+                                        {{ session()->has('currency') ? '$' : 'Bs' }}</small>
+                                    <small class="text-primary">{{ Carbon\Carbon::now()->toFormattedDateString() }}</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
@@ -45,20 +46,20 @@
                                 <table id="example1" class="table table-bordered table-striped text-center">
                                     <thead>
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Time</th>
-                                        <th>Actions</th>
+                                        <th>Orden</th>
+                                        <th>Motivo de Gasto</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
                                     <tfoot>
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Time</th>
-                                        <th>Actions</th>
+                                        <th>Orden</th>
+                                        <th>Motivo de Gasto</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </tfoot>
                                     <tbody>
@@ -66,7 +67,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $expense->name }}</td>
-                                            <td>{{ number_format($expense->amount, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $expense->amount, 2) }}</td>
                                             <td>{{ $expense->created_at->format('h:i:s A') }}</td>
                                             <td>
                                                 <a href="{{ route('admin.expense.edit', $expense->id) }}" class="btn
@@ -81,14 +82,17 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
+                                                <button class="btn btn-sn btn-success" onclick="exportTableToExcel('example1')">Exportar a Excel</button>
                                             </td>
                                         </tr>
                                     @endforeach
                                     </tbody>
 
                                 </table>
+                                {{ $expenses->render() }}
                             </div>
                             <!-- /.card-body -->
+                           <!-- <button onclick="exportTableToExcel('example1')">Exportar a Excel</button>-->
                         </div>
                         <!-- /.card -->
                     </div>
@@ -119,6 +123,98 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
 
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
+            });
+        });
+    </script>
+
+     <script type="text/javascript">
+
+        function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+    // Specify file name
+    filename = filename?filename+'.xls':'Moviltrend_Productos.xls';
+
+    // Create download link element
+    downloadLink = document.createElement("a");
+
+    document.body.appendChild(downloadLink);
+
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+    }
+}
+    </script>
     <script>
         $(function () {
             $("#example1").DataTable();
@@ -134,7 +230,7 @@
     </script>
 
 
-    <script type="text/javascript">
+    <<script type="text/javascript">
         function deleteItem(id) {
             const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
@@ -143,12 +239,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -167,7 +263,6 @@
             })
         }
     </script>
-
 
 
 @endpush

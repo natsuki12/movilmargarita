@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Show Supplier')
+@section('title', 'Moviltrend')
 
 @push('css')
 
@@ -15,8 +15,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Show Supplier</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Mostrar pedido</li>
                         </ol>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                         <!-- general form elements -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Show Supplier</h3>
+                                <h3 class="card-title">Mostrar pedido</h3>
                             </div>
                             <!-- /.card-header -->
 
@@ -43,33 +43,33 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Name</label>
+                                                <label>Nombre</label>
                                                 <p>{{ $supplier->name }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Email</label>
+                                                <label>Correo</label>
                                                 <p>{{ $supplier->email }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Phone</label>
+                                                <label>Telefono</label>
                                                 <p>{{ $supplier->phone }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Address</label>
+                                                <label>Direccion</label>
                                                 <p>{{ $supplier->address }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>City</label>
+                                                <label>Ciudad</label>
                                                 <p>{{ $supplier->city }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Shop Name</label>
+                                                <label>Nombre de la empresa</label>
                                                 <p>{{ $supplier->shop_name }}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Type</label>
+                                                <label>Tipo</label>
                                                 <p>
                                                     @if($supplier->type == 1)
                                                         {{ 'Distributor' }}

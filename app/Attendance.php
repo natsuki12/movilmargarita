@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use Jenssegers\Date\Date;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,4 +16,10 @@ class Attendance extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function getDeletedAtAttribute($date)
+	{
+		return new Date($date);
+
+	}
 }

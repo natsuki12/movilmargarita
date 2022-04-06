@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Create Advanced Salary')
+@section('title', 'Creacion de Salario Anticipado')
 
 @push('css')
 

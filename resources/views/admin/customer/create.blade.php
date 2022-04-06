@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Create Customer')
+@section('title', 'Personas Permitidas Para Encargos')
 
 @push('css')
 
@@ -16,8 +16,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Create Customer</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Tablero</a></li>
+                            <li class="breadcrumb-item active">Agregar persona autorizada</li>
                         </ol>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                         <!-- general form elements -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Create Customer</h3>
+                                <h3 class="card-title">Agregar persona autorizada</h3>
                             </div>
                             <!-- /.card-header -->
 
@@ -44,55 +44,55 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Name</label>
-                                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter Name">
+                                                <label>Nombre</label>
+                                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="ingrese nomre y apellido">
                                             </div>
                                             <div class="form-group">
-                                                <label>Email</label>
-                                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Enter Email">
+                                                <label>Correo</label>
+                                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="ingrese correo electronico">
                                             </div>
                                             <div class="form-group">
-                                                <label>Phone</label>
-                                                <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="Enter Phone">
+                                                <label>Telefono</label>
+                                                <input type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="ingrese numero de telefono">
                                             </div>
                                             <div class="form-group">
-                                                <label>Address</label>
-                                                <input type="text" class="form-control" name="address" value="{{ old('address') }}" placeholder="Enter Address">
+                                                <label>Direccion</label>
+                                                <input type="text" class="form-control" name="address" value="{{ old('address') }}" placeholder="ingrese direccion">
                                             </div>
                                             <div class="form-group">
-                                                <label>City</label>
-                                                <input type="text" class="form-control" name="city" value="{{ old('city') }}" placeholder="Enter City">
+                                                <label>Ciudad</label>
+                                                <input type="text" class="form-control" name="city" value="{{ old('city') }}" placeholder="ingrese ciudad de empresa">
                                             </div>
                                             <div class="form-group">
-                                                <label>Shop Name</label>
-                                                <input type="text" class="form-control" name="shop_name" value="{{ old('shop_name') }}" placeholder="Enter Shop Name">
+                                                <label>Nombre</label>
+                                                <input type="text" class="form-control" name="shop_name" value="{{ old('shop_name') }}" placeholder="ingrese nombre de la tienda">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="exampleInputFile">Photo</label>
+                                                <label for="exampleInputFile">Foto</label>
                                                 <div class="input-group">
                                                     <div class="custom-file">
                                                         <input type="file" name="photo" class="custom-file-input" id="exampleInputFile">
-                                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                                        <label class="custom-file-label" for="exampleInputFile">Cargar Archivo</label>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Account Holder</label>
-                                                <input type="text" class="form-control" name="account_holder" value="{{ old('account_holder') }}" placeholder="Enter Account Holder">
+                                                <label>Numero de autorizacion</label>
+                                                <input type="text" class="form-control" name="account_holder" value="{{ old('account_holder') }}" placeholder="ingrese numero de autorizacion">
                                             </div>
                                             <div class="form-group">
-                                                <label>Account Number</label>
-                                                <input type="text" class="form-control" name="account_number" value="{{ old('account_number') }}" placeholder="Enter Account Number">
+                                                <label>Numero de cuenta</label>
+                                                <input type="text" class="form-control" name="account_number" value="{{ old('account_number') }}" placeholder="numero de cuenta">
                                             </div>
                                             <div class="form-group">
-                                                <label>Bank Name</label>
-                                                <input type="text" class="form-control" name="bank_name" value="{{ old('bank_name') }}" placeholder="Enter Bank Name">
+                                                <label>Nombre del banco</label>
+                                                <input type="text" class="form-control" name="bank_name" value="{{ old('bank_name') }}" placeholder="nombre del banco">
                                             </div>
                                             <div class="form-group">
-                                                <label>Bank Branch</label>
-                                                <input type="text" class="form-control" name="bank_branch" value="{{ old('bank_branch') }}" placeholder="Enter Bank Branch">
+                                                <label>Sucursal</label>
+                                                <input type="text" class="form-control" name="bank_branch" value="{{ old('bank_branch') }}" placeholder="sucursal bancaria">
                                             </div>
                                         </div>
                                     </div>
@@ -101,7 +101,7 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary float-md-right">Create Customer</button>
+                                    <button type="submit" class="btn btn-primary float-md-right">Añadir persona autorizada</button>
                                 </div>
                             </form>
                         </div>

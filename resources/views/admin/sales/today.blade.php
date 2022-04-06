@@ -5,6 +5,15 @@
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
 @endpush
 
 @section('content')
@@ -17,8 +26,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Today's Sales</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Panel</a></li>
+                            <li class="breadcrumb-item active">Encargos del dia</li>
                         </ol>
                     </div>
                 </div>
@@ -35,43 +44,32 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    TODAY'S SALES LISTS
+                                    Encargos del dia
                                     <small class="text-danger pull-right">
-                                        <span class="badge badge-info">Total Sales : {{ $balance->sum('total') }} Taka</span>
-                                        <span class="badge badge-success">Paid : {{ $balance->sum('pay') }} Taka</span>
-                                        <span class="badge badge-warning">Due : {{ $balance->sum('due') }} Taka</span>
+                                        <span class="badge badge-info">Encargos : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('total') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
+                                        <span class="badge badge-success">Pagados : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('pay') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
+                                        <span class="badge badge-warning">Pediente a pagar : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('due') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
                                     </small>
-                                    <small class="text-primary">{{ date('d F Y') }}</small>
+                                    <small class="text-primary"> {{ Carbon\Carbon::now()->formatLocalized('%D') }}</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Product Title</th>
-                                        <th>Image</th>
-                                        <th>Customer Name</th>
-                                        <th>Quantity</th>
+                                        <th>Orden</th>
+                                        <th>Nombre de Producto</th>
+                                        <th>Imagen</th>
+                                        <th>Persona Autorizada</th>
+                                        <th>Catidad</th>
                                         <th>Total</th>
-                                        <th>Time</th>
-                                        <th>Delete</th>
+                                        <th>Hora</th>
+                                        <th>Borrar</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Product Title</th>
-                                        <th>Image</th>
-                                        <th>Customer Name</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                        <th>Time</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                    
+                                    <tbody style="color:black;">
                                     @foreach($orders as $order)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
@@ -81,7 +79,7 @@
                                             </td>
                                             <td>{{ $order->customer_name }}</td>
                                             <td>{{ $order->quantity }}</td>
-                                            <td>{{ number_format($order->total, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $order->total, 2) }}</td>
                                             <td>{{ date('h:i:s A', strtotime($order->created_at)) }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" type="button" onclick="deleteItem({{ $order->id }})">
@@ -126,22 +124,77 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+   <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
 
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
 
-    <script>
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
+     <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
                 "paging": true,
                 "lengthChange": false,
                 "searching": false,
-                "ordering": true,
+                "ordering": false,
                 "info": true,
-                "autoWidth": false
+                "sInfo": false,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
             });
         });
     </script>
+
+    
 
 
     <script type="text/javascript">
@@ -153,12 +206,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

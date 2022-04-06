@@ -26,6 +26,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['as'=>'admin.', 'prefix' => 'admin', 'middleware' => 'auth' ], function(){
 
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('supplier-list-excel', 'SupplierController@exportExcel')->name('suppliers.excel');
     Route::resource('employee', 'EmployeeController');
     Route::resource('customer', 'CustomerController');
     Route::resource('attendance', 'AttendanceController');
@@ -41,6 +42,8 @@ Route::group(['as'=>'admin.', 'prefix' => 'admin', 'middleware' => 'auth' ], fun
     Route::get('expense-yearly/{year?}', 'ExpenseController@yearly_expense')->name('expense.yearly');
 
     Route::get('setting', 'SettingController@index')->name('setting.index');
+    Route::put('currency/change', 'CurrencyController@change')->name('currency.change');
+    Route::put('currency/{id}', 'CurrencyController@update')->name('currency.update');
     Route::put('setting/{id}', 'SettingController@update')->name('setting.update');
 
     Route::resource('pos', 'PosController');
@@ -62,5 +65,7 @@ Route::group(['as'=>'admin.', 'prefix' => 'admin', 'middleware' => 'auth' ], fun
     Route::get('print/{customer_id}', 'InvoiceController@print')->name('invoice.print');
     Route::get('order-print/{order_id}', 'InvoiceController@order_print')->name('invoice.order_print');
     Route::post('invoice-final', 'InvoiceController@final_invoice')->name('invoice.final_invoice');
+
+Route::get('/laravel_google_chart', 'LaravelGoogleGraph@index');
 
 });

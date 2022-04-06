@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\Expense;
 use App\Order;
 use App\OrderDetail;
@@ -11,36 +12,36 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class OrderController extends Controller
+class OrderController extends Controller 
 {
 
     public function show($id)
-    {
+    {   $currency = Currency::first();
         $order = Order::with('customer')->where('id', $id)->first();
         //return $order;
         $order_details = OrderDetail::with('product')->where('order_id', $id)->get();
         //return $order_details;
         $company = Setting::latest()->first();
-        return view('admin.order.order_confirmation', compact('order_details', 'order', 'company'));
+        return view('admin.order.order_confirmation', compact('order_details', 'order', 'company','currency'));
     }
 
 
     public function pending_order()
     {
-        $pendings = Order::latest()->with('customer')->where('order_status', 'pending')->get();
+        $pendings = Order::latest()->with('customer')->where('order_status', 'pendiente')->get();
         return view('admin.order.pending_orders', compact('pendings'));
     }
 
     public function approved_order()
     {
-        $approveds = Order::latest()->with('customer')->where('order_status', 'approved')->get();
+        $approveds = Order::latest()->with('customer')->where('order_status', 'aprobada')->get();
         return view('admin.order.approved_orders', compact('approveds'));
     }
 
     public function order_confirm($id)
     {
         $order = Order::findOrFail($id);
-        $order->order_status = 'approved';
+        $order->order_status = 'aprobada';
         $order->save();
 
         Toastr::success('Order has been Approved! Please delivery the products', 'Success');
@@ -78,6 +79,7 @@ class OrderController extends Controller
     // for sales report
     public function today_sales()
     {
+        $currency = Currency::first();
         $today = date('Y-m-d');
 
         $balance = Order::where('order_date', $today)->get();
@@ -91,12 +93,12 @@ class OrderController extends Controller
             ->orderBy('order_details.created_at', 'desc')
             ->get();
 
-        return view('admin.sales.today', compact('orders', 'balance'));
+        return view('admin.sales.today', compact('orders', 'balance','currency'));
     }
 
     public function monthly_sales($month = null)
     {
-
+        $currency = Currency::first();
         if ($month == null)
         {
             $month = date('m');
@@ -115,11 +117,12 @@ class OrderController extends Controller
             ->orderBy('order_details.created_at', 'desc')
             ->get();
 
-        return view('admin.sales.month', compact('orders', 'month', 'balance'));
+        return view('admin.sales.month', compact('orders', 'month', 'balance','currency'));
     }
 
     public function total_sales()
     {
+        $currency = Currency::first();
         $balance = Order::all();
 
         $orders = DB::table('orders')
@@ -130,7 +133,7 @@ class OrderController extends Controller
             ->orderBy('order_details.created_at', 'desc')
             ->get();
 
-        return view('admin.sales.index', compact('balance', 'orders'));
+        return view('admin.sales.index', compact('balance', 'orders','currency'));
     }
 
 

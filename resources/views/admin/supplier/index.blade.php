@@ -5,6 +5,15 @@
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
 @endpush
 
 @section('content')
@@ -17,8 +26,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Supplier</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Proovedor</li>
                         </ol>
                     </div>
                 </div>
@@ -34,48 +43,25 @@
                         <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">SUPPLIERS LISTS</h3>
+                                <h3 class="card-title">Lista de Proovedores</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Image</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
-                                        <th>City</th>
-                                        <th>Type</th>
-                                        <th>Shop Name</th>
-                                        <th>Account Holder</th>
-                                        <th>Account Number</th>
-                                        <th>Bank Name</th>
-                                        <th>Bank Branch</th>
-                                        <th>Actions</th>
+                                        <th>Orden</th>
+                                        <th>Nombre</th>
+                                        <th>Foto</th>
+                                        <th>Correo</th>
+                                        <th>Telefono</th>
+                                        <th>Direccion</th>
+                                        <th>Ciudad</th>
+                                        
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Image</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
-                                        <th>City</th>
-                                        <th>Type</th>
-                                        <th>Shop Name</th>
-                                        <th>Account Holder</th>
-                                        <th>Account Number</th>
-                                        <th>Bank Name</th>
-                                        <th>Bank Branch</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                    <tbody style="color:black;">
                                     @foreach($suppliers as $key => $supplier)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
@@ -87,31 +73,16 @@
                                             <td>0{{ $supplier->phone }}</td>
                                             <td>{{ $supplier->address }}</td>
                                             <td>{{ $supplier->city }}</td>
+                                            
                                             <td>
-                                                @if($supplier->type == 1)
-                                                    {{ 'Distributor' }}
-                                                @elseif($supplier->type == 2)
-                                                    {{ 'Whole Seller' }}
-                                                @elseif($supplier->type == 3)
-                                                    {{ 'Brochure' }}
-                                                @else
-                                                    {{ 'None' }}
-                                                @endif
-                                            </td>
-                                            <td>{{ $supplier->shop_name }}</td>
-                                            <td>{{ $supplier->account_holder }}</td>
-                                            <td>{{ $supplier->account_number }}</td>
-                                            <td>{{ $supplier->bank_name }}</td>
-                                            <td>{{ $supplier->bank_branch }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.supplier.show', $supplier->id) }}" class="btn btn-success">
-                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                <a title="Mostrar Mas" href="{{ route('admin.supplier.show', $supplier->id) }}" class="btn btn-success">
+                                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
                                                 </a>
-                                                <a href="{{ route('admin.supplier.edit', $supplier->id) }}" class="btn
+                                                <a title="Editar" href="{{ route('admin.supplier.edit', $supplier->id) }}" class="btn
 													btn-info">
                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                 </a>
-                                                <button class="btn btn-danger" type="button" onclick="deleteItem({{ $supplier->id }})">
+                                                <button title="Borrar"class="btn btn-danger" type="button" onclick="deleteItem({{ $supplier->id }})">
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                 </button>
                                                 <form id="delete-form-{{ $supplier->id }}" action="{{ route('admin.supplier.destroy', $supplier->id) }}" method="post"
@@ -154,7 +125,74 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
+
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+
+     <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
+            });
+        });
+    </script>
 
 
     <script>
@@ -170,7 +208,6 @@
             });
         });
     </script>
-
 
     <script type="text/javascript">
         function deleteItem(id) {

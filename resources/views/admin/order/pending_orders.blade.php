@@ -1,10 +1,19 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Pending Oprders')
+@section('title', 'Ordenes Pendientes')
 
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
 @endpush
 
 @section('content')
@@ -17,8 +26,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Pending Oprders</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Ordenes Pendientes</li>
                         </ol>
                     </div>
                 </div>
@@ -34,36 +43,25 @@
                         <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">PENDING ORDERS LISTS</h3>
+                                <h3 class="card-title">LISTA DE ORDENES PENDIENTES</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center table-responsive-xl">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Date</th>
-                                        <th>Quantity</th>
+                                        <th>Orden</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha</th>
+                                        <th>Cantidad</th>
                                         <th>Total</th>
-                                        <th>Payment Status</th>
-                                        <th>Order Status</th>
-                                        <th>Actions</th>
+                                        <th>Estatus de Pago</th>
+                                        <th>Estatus de Orden</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Date</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                        <th>Payment Status</th>
-                                        <th>Order Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                    
+                                    <tbody style="color:black;">
                                     @foreach($pendings as $key => $order)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
@@ -76,7 +74,7 @@
 
                                             <td>
                                                 <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-success">
-                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
                                                 </a>
                                                 <button class="btn btn-danger" type="button" onclick="deleteItem({{ $order->id }})">
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
@@ -121,8 +119,75 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
 
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": true,
+                "sInfo": false,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
+            });
+        });
+    </script>
 
     <script>
         $(function () {
@@ -148,12 +213,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

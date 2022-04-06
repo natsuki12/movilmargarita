@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Invoice - {{ config('app.name', 'Inventory Management System') }}</title>
+    <title>Factura - {{ config('app.name', 'Moviltrend Margarita') }}</title>
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/font-awesome/css/font-awesome.min.css') }}">
@@ -33,8 +33,8 @@
                     <div class="row">
                         <div class="col-12">
                             <h4>
-                                <i class="fa fa-globe"></i> {{ config('app.name') }}
-                                <small class="float-right">Date: {{ date('l, d-M-Y h:i:s A') }}</small>
+                                <img src="{{ asset('assets/backend/img/logo.png') }}" width="100px">Moviltrend Margarita 
+                                        <small class="float-right">Fecha: {{ Carbon\Carbon::now()->formatLocalized('%d de %B del %Y') }}</small>
                             </h4>
                         </div>
                         <!-- /.col -->
@@ -42,31 +42,31 @@
                     <!-- info row -->
                     <div class="row invoice-info">
                         <div class="col-sm-4 invoice-col">
-                            From
+                            De
                             <address>
-                                <strong>Admin, {{ config('app.name') }}</strong><br>
+                                <strong>Compañia: Moviltrend Margarita</strong><br>
                                 {{ $company->address }}<br>
                                 {{ $company->city }} - {{ $company->zip_code }}, {{ $company->country }}<br>
-                                Phone: (+880) {{ $company->mobile }} {{ $company->phone !== null ? ', +88'.$company->phone : ''  }}<br>
-                                Email: {{ $company->email }}
+                                Telefono: (+58) {{ $company->mobile }} {{ $company->phone !== null ? ', +58'.$company->phone : ''  }}<br>
+                                Correo: {{ $company->email }}
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            To
+                            Para
                             <address>
                                 <strong>{{ $customer->name }}</strong><br>
                                 {{ $customer->address }}<br>
                                 {{ $customer->city }}<br>
-                                Phone: (+880) {{ $customer->phone }}<br>
-                                Email: {{ $customer->email }}
+                                Telefono: (+58) {{ $customer->phone }}<br>
+                                Correo: {{ $customer->email }}
                             </address>
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            <b>Payment Due:</b> {{ Cart::total() }}<br>
-                            <b>Order Status:</b> <span class="badge badge-warning">Pending</span><br>
-                            <b>Account:</b> {{ $customer->account_number }}
+                            <b>Total:</b> {{ Cart::total() }}<br>
+                            <b>Confirmacion de Trasferencia:</b> <span class="badge badge-warning">Pendiente</span><br>
+                            <b>Cuenta:</b> {{ $customer->account_number }}
                         </div>
                         <!-- /.col -->
                     </div>
@@ -78,11 +78,11 @@
                             <table class="table table-bordered text-center">
                                 <thead>
                                 <tr>
-                                    <th>S.N</th>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Cost</th>
-                                    <th>Subtotal</th>
+                                    <th>Orden</th>
+                                    <th>Articulo</th>
+                                    <th>Cantidad</th>
+                                    <th>Costo Por unidad</th>
+                                    <th>Total</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -111,16 +111,16 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <tr>
-                                        <th style="width:50%">Subtotal:</th>
+                                        <th style="width:50%">Total:</th>
                                         <td class="text-right">{{ Cart::subtotal() }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Tax (21%)</th>
+                                        <th>Envio</th>
                                         <td class="text-right">{{ Cart::tax() }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total:</th>
-                                        <td class="text-right">{{ Cart::total() }}</td>
+                                        <td class="text-right">{{ Cart::subtotal() }}</td>
                                     </tr>
                                 </table>
                             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\Customer;
 use App\Order;
 use App\OrderDetail;
@@ -19,10 +20,11 @@ class PosController extends Controller
      */
     public function index()
     {
+        $currency = Currency::first();
         $products = Product::with('category')->get();
         $customers = Customer::all();
         $cart_products = Cart::content();
-        return view('admin.pos.index', compact('products', 'customers', 'cart_products'));
+        return view('admin.pos.index', compact('products', 'customers', 'cart_products','currency'));
     }
 
     /**

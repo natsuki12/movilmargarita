@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Expense;
+use App\Currency;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,9 +17,9 @@ class ExpenseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $expenses = Expense::latest()->get();
-        return view('admin.expense.index', compact('expenses'));
+    {   $currency = Currency::first();
+        $expenses = Expense::latest()->paginate();
+        return view('admin.expense.index', compact('expenses','currency'));
     }
 
     /**
@@ -62,7 +63,7 @@ class ExpenseController extends Controller
         $expense->save();
 
         Toastr::success('Expense added successfully', 'Success');
-        return redirect()->route('admin.expense.today');
+        return redirect()->route('admin.expense.month');
     }
 
     /**
@@ -113,7 +114,7 @@ class ExpenseController extends Controller
         $expense->save();
 
         Toastr::success('Expense updated successfully', 'Success');
-        return redirect()->route('admin.expense.today');
+        return redirect()->route('admin.expense.month');
     }
 
     /**
@@ -133,30 +134,33 @@ class ExpenseController extends Controller
 
     public function today_expense()
     {
+        $currency = Currency::first();
         $today = date('Y-m-d');
-        $expenses = Expense::latest()->where('date', $today)->get();
-        return view('admin.expense.today', compact('expenses'));
+        $expenses = Expense::latest()->where('date', $today)->paginate();
+        return view('admin.expense.today', compact('expenses','currency'));
     }
 
     public function month_expense($month = null)
     {
+        $currency = Currency::first();
         if ($month == null)
         {
             $month = date('F');
         }
         $expenses = Expense::latest()->where('month', $month)->get();
-        return view('admin.expense.month', compact('expenses', 'month'));
+        return view('admin.expense.month', compact('expenses', 'month','currency'));
     }
 
     public function yearly_expense($year = null)
     {
+        $currency = Currency::first();
         if ($year == null)
         {
             $year = date('Y');
         }
         $expenses = Expense::latest()->where('year', $year)->get();
         $years = Expense::select('year')->distinct()->take(12)->get();
-        return view('admin.expense.year', compact('expenses', 'year', 'years'));
+        return view('admin.expense.year', compact('expenses', 'year', 'years','currency'));
     }
 
 

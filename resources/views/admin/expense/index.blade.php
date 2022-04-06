@@ -1,10 +1,19 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Expenses')
+@section('title', 'Gastos')
 
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
 @endpush
 
 @section('content')
@@ -17,8 +26,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Expenses</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Gastos</li>
                         </ol>
                     </div>
                 </div>
@@ -35,41 +44,31 @@
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    EXPENSES LISTS
-                                    <small class="text-danger pull-right">Total Expenses : {{ $expenses->sum('amount') }} Taka</small>
+                                    Lista de gastos
+                                    <small class="text-danger pull-right">Total gastos : {{(session()->has('currency') ? 1 : $currency->value) * $expenses->sum('amount') }} {{ session()->has('currency') ? '$' : 'Bs' }}</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
+                                        <th>Orden</th>
+                                        <th>Motivo</th>
+                                        <th>Monto</th>
+                                        <th>Mes</th>
+                                        <th>Año</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                   
+                                  <tbody style="color:black;">
                                     @foreach($expenses as $key => $expense)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $expense->name }}</td>
-                                            <td>{{ number_format($expense->amount, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $expense->amount, 2) }}</td>
                                             <td>{{ $expense->month }}</td>
                                             <td>{{ $expense->year }}</td>
                                             <td>{{ $expense->created_at->format('d M Y h:i:s A') }}</td>
@@ -86,6 +85,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
+                                               
                                             </td>
                                         </tr>
                                     @endforeach
@@ -93,6 +93,8 @@
 
                                 </table>
                             </div>
+
+                        <!--<button onclick="exportTableToExcel('example1')">Exportar a Excel</button>-->
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
@@ -121,8 +123,110 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
 
+
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
+
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+
+     <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+    // Specify file name
+    filename = filename?filename+'.xls':'Moviltrend_Productos.xls';
+
+    // Create download link element
+    downloadLink = document.createElement("a");
+
+    document.body.appendChild(downloadLink);
+
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+        // Setting the file name
+        downloadLink.download = filename;
+
+        //triggering the function
+        downloadLink.click();
+    }
+}
+    </script>
 
     <script>
         $(function () {
@@ -148,12 +252,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

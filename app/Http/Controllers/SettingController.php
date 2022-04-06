@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Currency;
 use App\Setting;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
@@ -13,15 +14,11 @@ use Intervention\Image\Facades\Image;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $setting = Setting::latest()->first();
-        return view('admin.setting', compact('setting'));
+        $currency = Currency::first();
+        return view('admin.setting', compact('setting','currency'));
     }
 
     /**

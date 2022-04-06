@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Currency;
 use App\Product;
 use App\Supplier;
 use Brian2694\Toastr\Facades\Toastr;
@@ -22,8 +23,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->with('category', 'supplier')->get();
-        return view('admin.product.index', compact('products'));
+        $currency = Currency::first(); 
+        $products = Product::latest()->with('category', 'supplier')->paginate();
+        return view('admin.product.index', compact('products','currency'));
     }
 
     /**
@@ -110,7 +112,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('admin.product.show', compact('product'));
+        $currency = Currency::first();
+        return view('admin.product.show', compact('product','currency'));
     }
 
     /**

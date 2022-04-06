@@ -16,7 +16,7 @@
                     <div class="col-sm-6 offset-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Show Customer</li>
+                            <li class="breadcrumb-item active">Personas autorizadas</li>
                         </ol>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                         <!-- general form elements -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Show Customer</h3>
+                                <h3 class="card-title">Personas autorizadas</h3>
                             </div>
                             <!-- /.card-header -->
 
@@ -43,27 +43,27 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Name</label>
+                                                <label>Nombre</label>
                                                 <p>{{ $customer->name }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Email</label>
+                                                <label>Correo</label>
                                                 <p>{{ $customer->email }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Phone</label>
+                                                <label>Telefono</label>
                                                 <p>{{ $customer->phone }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Address</label>
+                                                <label>Estado</label>
                                                 <p>{{ $customer->address }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>City</label>
+                                                <label>Municipio</label>
                                                 <p>{{ $customer->city }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label>Shop Name</label>
+                                                <label>Nombre de la tienda</label>
                                                 <p>{{ $customer->shop_name }}</p>
                                             </div>
                                         </div>

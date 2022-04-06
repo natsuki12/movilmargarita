@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Advanced Salary')
+@section('title', 'Anticipo de Salario')
 
 @push('css')
     <!-- DataTables -->
@@ -17,8 +17,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Advanced Salary</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Panel</a></li>
+                            <li class="breadcrumb-item active">Anticipo de Salario</li>
                         </ol>
                     </div>
                 </div>
@@ -34,35 +34,24 @@
                         <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">ADVANCED SALARIES LISTS</h3>
+                                <h3 class="card-title">Lista de Anticipo de Salario</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
                                     <thead>
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Employee Name</th>
-                                        <th>Photo</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>Salary</th>
-                                        <th>Advanced Salary</th>
-                                        <th>Actions</th>
+                                        <th>Salario</th>
+                                        <th>Nombre del Empleado</th>
+                                        <th>Foto</th>
+                                        <th>Monto</th>
+                                        <th>Año</th>
+                                        <th>Salario</th>
+                                        <th>Anticipo de Salario</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Employee Name</th>
-                                        <th>Photo</th>
-                                        <th>Month</th>
-                                        <th>Year</th>
-                                        <th>Salary</th>
-                                        <th>Advanced Salary</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </tfoot>
+                                    
                                     <tbody>
                                     @foreach($advanced_salaries as $key => $salary)
                                         <tr>
@@ -77,7 +66,7 @@
                                             <td>{{ $salary->advanced_salary }}</td>
                                             <td>
                                                 <a href="{{ route('admin.advanced_salary.show', $salary->id) }}" class="btn btn-success">
-                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    <i class="fa fa-binoculars" aria-hidden="true"></i>
                                                 </a>
                                                 <a href="{{ route('admin.advanced_salary.edit', $salary->id) }}" class="btn
 													btn-info">
@@ -153,12 +142,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Estas Seguro?',
+                text: "No se podra Revertir Despues!",
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -169,8 +158,8 @@
                     result.dismiss === swal.DismissReason.cancel
                 ) {
                     swalWithBootstrapButtons(
-                        'Cancelled',
-                        'Your data is safe :)',
+                        'Cancelado',
+                        'Guardado :)',
                         'error'
                     )
                 }

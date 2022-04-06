@@ -6,7 +6,17 @@
 
 @push('css')
     <!-- DataTables -->
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
 @endpush
 
 @section('content')
@@ -19,8 +29,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">{{  date('F') }} Expenses</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Panel</a></li>
+                            <li class="breadcrumb-item active">{{ Carbon\Carbon::now()->formatLocalized('%B') }} Encargos</li>
                         </ol>
                     </div>
                 </div>
@@ -35,69 +45,60 @@
                     <div class="col-md-12">
                         <!-- general form elements -->
                         <div class="mb-3">
-                            <a href="{{ route('admin.sales.monthly', 'january') }}" class="btn btn-info">January</a>
-                            <a href="{{ route('admin.sales.monthly', 'february') }}" class="btn btn-primary">February</a>
-                            <a href="{{ route('admin.sales.monthly', 'march') }}" class="btn btn-secondary">March</a>
-                            <a href="{{ route('admin.sales.monthly', 'april') }}" class="btn btn-warning">April</a>
-                            <a href="{{ route('admin.sales.monthly', 'may') }}" class="btn btn-info">May</a>
-                            <a href="{{ route('admin.sales.monthly', 'june') }}" class="btn btn-success">June</a>
-                            <a href="{{ route('admin.sales.monthly', 'july') }}" class="btn btn-danger">July</a>
-                            <a href="{{ route('admin.sales.monthly', 'august') }}" class="btn btn-primary">August</a>
-                            <a href="{{ route('admin.sales.monthly', 'september') }}" class="btn btn-info">September</a>
-                            <a href="{{ route('admin.sales.monthly', 'october') }}" class="btn btn-secondary">October</a>
-                            <a href="{{ route('admin.sales.monthly', 'november') }}" class="btn btn-warning">November</a>
-                            <a href="{{ route('admin.sales.monthly', 'december') }}" class="btn btn-danger">December</a>
+                             <select name="dest"id="currency-value" type="text" class="form-control" name="currency">
+                            <option value="{{ route('admin.sales.monthly', 'january') }}">Enero</option>
+                            <option value="{{ route('admin.sales.monthly', 'february') }}">Febrero</option>
+                            <option value="{{ route('admin.sales.monthly', 'march') }}">Marzo</option>
+                            <option value="{{ route('admin.sales.monthly', 'april') }}">Abril</option>
+                            <option value="{{ route('admin.sales.monthly', 'may') }}">Mayo</option>
+                            <option value="{{ route('admin.sales.monthly', 'june') }}">Junio</option>
+                            <option value="{{ route('admin.sales.monthly', 'july') }}">Julio</option>
+                            <option value="{{ route('admin.sales.monthly', 'august') }}">Agosto</option>
+                            <option value="{{ route('admin.sales.monthly', 'september') }}">Septiembre</option>
+                            <option value="{{ route('admin.sales.monthly', 'october') }}">Octubre</option>
+                            <option value="{{ route('admin.sales.monthly', 'november') }}">Noviembre</option>
+                            <option value="{{ route('admin.sales.monthly', 'december') }}">Diciembre</option>
+                            </select>
+                            
                         </div>
 
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    <strong class="text-danger">{{ strtoupper(date("F", mktime(0, 0, 0, $month, 10))) }}</strong> SALES LISTS
+                                     Encargos del mes
+                                    
                                     <small class="text-danger pull-right">
-                                        <span class="badge badge-info">Total Sales : {{ $balance->sum('total') }} Taka</span>
-                                        <span class="badge badge-success">Paid : {{ $balance->sum('pay') }} Taka</span>
-                                        <span class="badge badge-warning">Due : {{ $balance->sum('due') }} Taka</span>
+                                        <span class="badge badge-info">Total Encargos : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('total') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
+                                        <span class="badge badge-success">Pagos : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('pay') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
+                                        <span class="badge badge-warning">Deudas : {{ (session()->has('currency') ? 1 : $currency->value) * $balance->sum('due') }} {{ session()->has('currency') ? '$' : 'Bs' }}</span>
                                     </small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Product Title</th>
-                                        <th>Image</th>
-                                        <th>Customer Name</th>
-                                        <th>Quantity</th>
+                                        <th>Orden</th>
+                                        <th>Nombre Articulo</th>
+                                        
+                                        <th>Persona Autorizada</th>
+                                        <th>Cantidad</th>
                                         <th>Total</th>
-                                        <th>Time</th>
-                                        <th>Delete</th>
+                                        <th>Fecha</th>
+                                        <th>Eliminar</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Product Title</th>
-                                        <th>Image</th>
-                                        <th>Customer Name</th>
-                                        <th>Quantity</th>
-                                        <th>Total</th>
-                                        <th>Time</th>
-                                        <th>Delete</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                    
+                                    <tbody style="color:black">
                                     @foreach($orders as $order)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $order->product_name }}</td>
-                                            <td>
-                                                <img class="img-rounded" width="40" height="30" src="{{ URL::asset('storage/product/'. $order->image) }}" alt="{{ $order->product_name }}">
-                                            </td>
+                                            
                                             <td>{{ $order->customer_name }}</td>
                                             <td>{{ $order->quantity }}</td>
-                                            <td>{{ number_format($order->total, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $order->total, 2) }}</td>
                                             <td>{{ date('d-M-Y h:i:s A', strtotime($order->created_at)) }}</td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" type="button" onclick="deleteItem({{ $order->id }})">
@@ -143,23 +144,65 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
 
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+    <script type="text/javascript">
+        $("select").click(function() {
+  var open = $(this).data("isopen");
+  if(open) {
+    window.location.href = $(this).val()
+  }
+  //set isopen to opposite so next time when use clicked select box
+  //it wont trigger this event
+  $(this).data("isopen", !open);
+});
+    </script>
 
-    <script>
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
+     <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
                 "paging": true,
                 "lengthChange": false,
                 "searching": false,
                 "ordering": true,
                 "info": true,
-                "autoWidth": false
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": ['csv', 'excel', 'pdf', 'print']
             });
         });
     </script>
 
+    
 
     <script type="text/javascript">
         function deleteItem(id) {
@@ -170,12 +213,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                title: 'Seguro Que Quieres Eliminar?',
+                text: "No se Podra Repuperar Informacion Despues",
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

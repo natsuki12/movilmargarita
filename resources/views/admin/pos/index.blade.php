@@ -1,10 +1,16 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Pos')
+@section('title', 'Moviltrend')
 
 @push('css')
     <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+
+
+    <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/chosen/chosen.ccs') }}">
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
+    <style type="text/css">
+        
+    </style>
 @endpush
 
 @section('content')
@@ -17,8 +23,8 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Pos</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active">Cargo de pedido</li>
                         </ol>
                     </div>
                 </div>
@@ -30,29 +36,31 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- left column -->
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="card">
                             <form action="{{ route('admin.invoice.create') }}" method="post">
                                 @csrf
                                 <div class="card-header">
                                     <h3 class="card-title">
-                                        Customer
+                                        Pedido
                                         <span>
-                                            <button type="submit" class="btn btn-sm btn-info float-md-right ml-3">Create Invoice</button>
-                                            <a href="{{ route('admin.customer.create') }}" class="btn btn-sm btn-primary float-md-right">Add New</a>
+                                            <button type="submit" class="btn btn-sm btn-info float-md-right ml-3">Cargar pedido</button>
+                                            @if(auth()->user()->hasRole('admin')|| auth()->user()->hasRole('contador'))<a href="{{ route('admin.customer.create') }}" class="btn btn-sm btn-primary float-md-right">Crear Persona Autorizada</a>
+                                            @endif
                                         </span>
                                     </h3>
 
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Select Customer</label>
-                                        <select name="customer_id" class="form-control" required>
-                                            <option value="" disabled selected>Select a Customer</option>
+                                        <label>Seleccionar persona autorizada</label>
+                                        <select name="customer_id" class="chosen" style="width:350px;" tabindex="1"required>
+                                            
                                             @foreach($customers as $customer)
                                                 <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                             @endforeach
                                         </select>
+
                                     </div>
                                 </div>
                             </form>
@@ -64,27 +72,27 @@
                             <div class="card-header">
                                 <h3 class="card-title">
                                     <i class="fa fa-info"></i>
-                                    Shopping Lists
+                                    Lista de pedidos
 
                                 </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 @if($cart_products->count() < 1)
-                                    <div class="alert alert-danger">
-                                        No Product Added
+                                    <div class="alert alert-movis1">
+                                        No tienes productos agregados
                                     </div>
                                 @else
                                     <table class="table table-bordered table-striped text-center mb-3">
                                         <thead>
                                         <tr>
-                                            <th>S.N</th>
-                                            <th>Name</th>
-                                            <th width="17%">Qty</th>
-                                            <th>Price</th>
-                                            <th>Sub Total</th>
-                                            <th>Update</th>
-                                            <th>Delete</th>
+                                            <th>Orden</th>
+                                            <th>Nombre</th>
+                                            <th width="17%">Cantidad</th>
+                                            <th>Precio</th>
+                                            <th>Sub total</th>
+                                            <th>Actualizar</th>
+                                            <th>Borrar</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -99,8 +107,9 @@
                                                     <td>
                                                         <input type="number" name="qty" class="form-control" value="{{ $product->qty }}">
                                                     </td>
-                                                    <td>{{ $price = number_format($product->price, 2) }}</td>
-                                                    <td>{{ $price * $product->qty }}</td>
+                                                    <?php $price = (session()->has('currency') ? 1 : $currency->value) * $product->price ?>
+                                                    <td>{{ number_format($price, 2) }}</td>
+                                                    <td>{{ number_format($price * $product->qty, 2) }}</td>
                                                     <td>
                                                         <button type="submit" class="btn btn-sm btn-success">
                                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
@@ -125,12 +134,14 @@
                                 @endif
 
                                 <div class="alert alert-info">
-                                    <p>Quantity : {{ Cart::count() }}</p>
-                                    <p>Sub Total : {{ Cart::subtotal() }} Taka</p>
-                                    Tax : {{ Cart::tax() }} Taka
+                                    <p>Cantidad : {{ Cart::count() }}</p>
+                                    <p>Sub Total : {{ (session()->has('currency') ? 1 : $currency->value) * Cart::subtotal() }}
+                                        {{ session()->has('currency') ? '$' : 'Bs' }}</p>
+                                    Envio : {{ Cart::tax() }} {{ session()->has('currency') ? '$' : 'Bs' }}
                                 </div>
                                 <div class="alert alert-success">
-                                    Total : {{ Cart::total() }} Taka
+                                    Total : {{ (session()->has('currency') ? 1 : $currency->value) * Cart::total() }}
+                                    {{ session()->has('currency') ? '$' : 'Bs' }}
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -138,37 +149,27 @@
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <!-- general form elements -->
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">POS</h3>
+                                <h3 class="card-title">Cargo de Pedido</h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
                                     <thead>
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Image</th>
-                                        <th>Price</th>
-                                        <th>Product Code</th>
-                                        <th>Add To Cart</th>
+                                        <th>Orden</th>
+                                        <th>Nombre</th>
+                                        <th>Categoria</th>
+                                        <th>Foto</th>
+                                        <th>Precio</th>
+                                        <th>Imei</th>
+                                        <th>Agregar a pedido</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Image</th>
-                                        <th>Price</th>
-                                        <th>Product Code</th>
-                                        <th>Add To Cart</th>
-                                    </tr>
-                                    </tfoot>
+
                                     <tbody>
                                     @foreach($products as $key => $product)
                                         <tr>
@@ -185,7 +186,7 @@
                                                 <td>
                                                     <img width="40" height="40" class="img-fluid" src="{{ URL::asset('storage/product/'. $product->image) }}" alt="{{ $product->name }}">
                                                 </td>
-                                                <td>{{ number_format($product->selling_price, 2) }}</td>
+                                                <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $product->selling_price, 2) }}</td>
                                                 <td>{{ strtoupper($product->code) }}</td>
                                                 <td>
                                                     <button type="submit" class="btn btn-sm btn-success px-2">
@@ -211,38 +212,52 @@
         </section>
         <!-- /.content -->
     </div> <!-- Content Wrapper end -->
+
 @endsection
 
 
 
 
 @push('js')
+    <script type="text/javascript">
+        
+        $('#example').dataTable( {
+    "drawCallback": function( settings ) {
+         $('ul.pagination').addClass("pagination-sm");
+    }
+});
 
+    </script>
     <!-- DataTables -->
-    <script src="{{ asset('assets/backend/plugins/datatables/jquery.dataTables.js') }}"></script>
-    <script src="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.js') }}"></script>
+  
     <!-- SlimScroll -->
     <script src="{{ asset('assets/backend/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('assets/backend/js/boton8.js') }}">
 
-
-    <script>
-        $(function () {
-            $("#example1").DataTable();
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false
-            });
-        });
+    <script src="{{ asset('assets/backend/plugins/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('assets/backend/plugins/chosen/chosen.jquery.js') }}"></script>
+    <script type="text/javascript">
+        $("select").click(function() {
+  var open = $(this).data("isopen");
+  if(open) {
+    window.location.href = $(this).val()
+  }
+  //set isopen to opposite so next time when use clicked select box
+  //it wont trigger this event
+  $(this).data("isopen", !open);
+});
     </script>
+    <script type="text/javascript">
+$(document).ready(function(){
+    $(".chosen").chosen({no_results_text:'No hay resultados para '});
+});
+</script>
+
+  
 
 
     <script type="text/javascript">
@@ -254,12 +269,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

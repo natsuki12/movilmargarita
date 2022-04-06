@@ -7,6 +7,15 @@
 @push('css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('assets/backend/plugins/datatables/dataTables.bootstrap4.css') }}">
+    <style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
+
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}
+    </style>
 @endpush
 
 @section('content')
@@ -20,7 +29,7 @@
                     <div class="col-sm-6 offset-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">{{  date('F') }} Expenses</li>
+                            <li class="breadcrumb-item active">Gastos del mes </li>
                         </ol>
                     </div>
                 </div>
@@ -35,54 +44,49 @@
                     <div class="col-md-12">
                         <!-- general form elements -->
                         <div class="mb-3">
-                            <a href="{{ route('admin.expense.month', 'january') }}" class="btn btn-info">January</a>
-                            <a href="{{ route('admin.expense.month', 'february') }}" class="btn btn-primary">February</a>
-                            <a href="{{ route('admin.expense.month', 'march') }}" class="btn btn-secondary">March</a>
-                            <a href="{{ route('admin.expense.month', 'april') }}" class="btn btn-warning">April</a>
-                            <a href="{{ route('admin.expense.month', 'may') }}" class="btn btn-info">May</a>
-                            <a href="{{ route('admin.expense.month', 'june') }}" class="btn btn-success">June</a>
-                            <a href="{{ route('admin.expense.month', 'july') }}" class="btn btn-danger">July</a>
-                            <a href="{{ route('admin.expense.month', 'august') }}" class="btn btn-primary">August</a>
-                            <a href="{{ route('admin.expense.month', 'september') }}" class="btn btn-info">September</a>
-                            <a href="{{ route('admin.expense.month', 'october') }}" class="btn btn-secondary">October</a>
-                            <a href="{{ route('admin.expense.month', 'november') }}" class="btn btn-warning">November</a>
-                            <a href="{{ route('admin.expense.month', 'december') }}" class="btn btn-danger">December</a>
+                            <select name="dest"id="currency-value" type="text" class="form-control" name="currency">
+                            <option value="{{ route('admin.expense.month', 'january') }}">Enero</option>
+                            <option value="{{ route('admin.expense.month', 'february') }}">Febrero</option>
+                            <option value="{{ route('admin.expense.month', 'march') }}">Marzo</option>
+                            <option value="{{ route('admin.expense.month', 'april') }}">Abril</option>
+                            <option value="{{ route('admin.expense.month', 'may') }}">Mayo</option>
+                            <option value="{{ route('admin.expense.month', 'june') }}">Junio</option>
+                            <option value="{{ route('admin.expense.month', 'july') }}">Julio</option>
+                            <option value="{{ route('admin.expense.month', 'august') }}">Agosto</option>
+                            <option value="{{ route('admin.expense.month', 'september') }}">Septiembre</option>
+                            <option value="{{ route('admin.expense.month', 'october') }}">Octubre</option>
+                            <option value="{{ route('admin.expense.month', 'november') }}">Noviembre</option>
+                            <option value="{{ route('admin.expense.month', 'december') }}">Diciembre</option>
+                            </select>
+                            
                         </div>
 
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    <strong class="text-danger">{{ strtoupper($month) }}</strong> EXPENSES LISTS
-                                    <small class="text-danger pull-right">Total Expenses : {{ $expenses->sum('amount') }} Taka</small>
+                                     Lista de gastos del mes de {{ Carbon\Carbon::now()->formatLocalized('%B') }}
+                                    <small class="text-danger pull-right">Total Gastos : {{(session()->has('currency') ? 1 : $currency->value) * $expenses->sum('amount') }} {{ session()->has('currency') ? '$' : 'Bs' }}</small>
                                 </h3>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-striped text-center">
-                                    <thead>
+                                    <thead style="background-color: #00517a; color:#fff; ">
                                     <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
+                                        <th>Orden</th>
+                                        <th>Motivo</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
                                     </tr>
                                     </thead>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Serial</th>
-                                        <th>Expense Title</th>
-                                        <th>Amount</th>
-                                        <th>Month</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                    </tfoot>
-                                    <tbody>
+                                    
+                                     <tbody style="color:black">
                                     @foreach($expenses as $key => $expense)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>{{ $expense->name }}</td>
-                                            <td>{{ number_format($expense->amount, 2) }}</td>
+                                            <td>{{ number_format((session()->has('currency') ? 1 : $currency->value) * $expense->amount, 2) }}</td>
                                             <td>{{ $expense->date->toFormattedDateString() }}</td>
                                             <td>
                                                 <a href="{{ route('admin.expense.edit', $expense->id) }}" class="btn
@@ -132,8 +136,95 @@
     <script src="{{ asset('assets/backend/plugins/fastclick/fastclick.js') }}"></script>
 
     <!-- Sweet Alert Js -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.1/dist/sweetalert2.all.min.js"></script>
 
+
+    <script src="{{ asset('assets/backend/js/alerta.js') }}"></script>
+
+     <script src="{{ asset('assets/backend/js/boton.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton2.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton3.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton4.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton5.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton6.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/boton7.js') }}"></script>
+    <script type="text/javascript">
+        $("select").click(function() {
+  var open = $(this).data("isopen");
+  if(open) {
+    window.location.href = $(this).val()
+  }
+  //set isopen to opposite so next time when use clicked select box
+  //it wont trigger this event
+  $(this).data("isopen", !open);
+});
+    </script>
+
+    <script type="text/javascript">
+function surfto(form)
+{
+var myindex=form.dest.selectedIndex
+window.open(form.dest.options[myindex].value,"_top","&quotGiño;
+}
+</script>
+
+     <script type="text/javascript">
+        $(document).ready(function () {
+           
+            var table = $('#example1').DataTable({
+                "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
+                "responsive": false,
+                "language": {
+                    "url": "{{ asset('assets/backend/js/español.js')}}"
+                },
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "order": [
+                    [0, "desc"]
+                ],
+                "pagingType": "numbers",
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                    .search(this.value)
+                                    .draw();
+                            }
+                        });
+                    })
+                },
+                "buttons": [
+             {
+            text: 'Imprimir',
+            titleAttr: 'imprimir',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='C:\Users\Federico\Downloads')
+            }
+
+        },{
+            text: 'Excel',
+            titleAttr: 'Excel',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        },{
+            text: 'PDF',
+            titleAttr: 'PDF',
+            action: function ( e, dt, node, config ) {
+                onclick (window.location.href='http://www.datatables.net')
+            }
+            
+        }]
+            });
+        });
+    </script>
 
     <script>
         $(function () {
@@ -159,12 +250,12 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '¿Estas Seguro?',
+                text: "No se podra revertir despues de esto!",
+                type: 'Alerta',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
+                confirmButtonText: 'Si, borrar!',
+                cancelButtonText: 'No, cancelar!',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {

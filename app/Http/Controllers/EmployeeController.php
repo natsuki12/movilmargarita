@@ -82,7 +82,6 @@ class EmployeeController extends Controller
         $employee->address = $request->input('address');
         $employee->city = $request->input('city');
         $employee->experience = $request->input('experience');
-        $employee->nid_no = $request->input('nid_no');
         $employee->salary = $request->input('salary');
         $employee->vacation = $request->input('vacation');
         $employee->experience = $request->input('experience');

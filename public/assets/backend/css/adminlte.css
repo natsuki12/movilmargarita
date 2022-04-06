@@ -1646,6 +1646,7 @@ pre code {
   }
 }
 
+
 @media (max-width: 1199.98px) {
   .table-responsive-xl {
     display: block;
@@ -13053,3 +13054,17 @@ a.text-muted:hover {
 }
 
 /*# sourceMappingURL=adminlte.css.map */
+
+html,body {
+    scrollbar-width: thin;
+    scrollbar-color: #aaa white;
+    scroll-behavior: smooth;
+}
+html::-webkit-scrollbar,body::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #00517a;
+}
+html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb {
+    background: #00517a;
+}

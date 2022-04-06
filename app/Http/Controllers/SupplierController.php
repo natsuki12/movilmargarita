@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SuppliersExport;
 class SupplierController extends Controller
 {
     /**
@@ -18,12 +19,18 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+   
     public function index()
     {
         $suppliers = Supplier::latest()->get();
         return view('admin.supplier.index', compact('suppliers'));
     }
 
+ public function exportExcel()
+    {
+        return Excel::download(new SuppliersExport, 'supplier-list.xlsx');
+    }
     /**
      * Show the form for creating a new resource.
      *

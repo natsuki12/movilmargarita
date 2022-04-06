@@ -54,7 +54,6 @@ class CartController extends Controller
         $name = $request->input('name');
         $qty = $request->input('qty');
         $price = $request->input('price');
-
         $add = Cart::add(['id' => $id, 'name' => $name, 'qty' => $qty, 'price' => $price, 'weight' => 1 ]);
         if ($add)
         {

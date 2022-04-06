@@ -1,9 +1,16 @@
 @extends('layouts.backend.app')
 
-@section('title', 'Take Attendance')
+@section('title', 'Toma de asistencia')
 
 @push('css')
+<style type="text/css">
+        .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
 
+}
+table.dataTable tbody tr {
+    background-color: #fff;
+}</style>
 @endpush
 
 @section('content')
@@ -17,7 +24,8 @@
                     <div class="col-sm-6 offset-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Take Attendance</li>
+                            <li class="breadcrumb-item active">Marcar asistencia</li>
+                           
                         </ol>
                     </div>
                 </div>
@@ -33,7 +41,7 @@
                         <!-- general form elements -->
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Take Attendance</h3>
+                                <h3 class="card-title">Marcar asistencia</h3>
                             </div>
                             <!-- /.card-header -->
 
@@ -41,18 +49,18 @@
                             <form role="form" action="{{ route('admin.attendance.store') }}" method="post">
                                 @csrf
                                 <div class="card-body">
-                                    <h2 class="text-center my-4 text-bold text-primary">Today : {{ date('d F Y') }}</h2>
+                                    <h2 class="text-center my-4 text-bold text-primary">Fecha : {{ Carbon\Carbon::now()->formatLocalized('%D') }}</h2>
                                     <div class="row">
                                         <table class="table table-striped table-bordered"> 
-                                            <thead>
+                                            <thead style="background-color: #00517a; color:#fff; ">
                                                 <tr>
-                                                    <th>Serial</th>
-                                                    <th>Name</th>
-                                                    <th>Photo</th>
-                                                    <th>Attendance</th>
+                                                    <th>Orden</th>
+                                                    <th>Nombre</th>
+                                                    <th>Foto</th>
+                                                    <th>Asistencia</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="color:black">
                                                 <form action="{{ route('admin.attendance.store') }}" method="post">
                                                     @csrf
                                                     @foreach($employees as $key => $employee)
@@ -64,8 +72,8 @@
                                                             </td>
                                                             <input type="hidden" name="employee_id[]" value="{{ $employee->id }}">
                                                             <td>
-                                                                <input type="radio" name="attendance[{{ $employee->id }}]" value="1" required>Present
-                                                                <input type="radio" name="attendance[{{ $employee->id }}]" value="0">Absent
+                                                                <input type="radio" name="attendance[{{ $employee->id }}]" value="1"  /> Asistente
+                                                                <input type="radio" name="attendance[{{ $employee->id }}]" value="0"   />Inasistente
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -79,7 +87,7 @@
                                 <!-- /.card-body -->
 
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary float-md-right">Take Attendance</button>
+                                    <button type="submit" class="btn btn-primary float-md-right">Guardar Asistencia</button>
                                 </div>
                             </form>
                         </div>
